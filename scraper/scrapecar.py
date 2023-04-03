@@ -4,7 +4,7 @@ import json
 
 def scraper(html_content):
     soup = BeautifulSoup(html_content.content, "html.parser")
-    with open(f"scraped_{dt.datetime.today().strftime('%Y-%m-%d')}.txt", "a", encoding="utf-8") as f:
+    with open(f"scraped_{dt.datetime.today().strftime('%Y-%m-%d')}.json", "a", encoding="utf-8") as f:
 
         titleprice = scrapetitleprice(soup)
 
