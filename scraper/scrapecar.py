@@ -1,14 +1,28 @@
 from bs4 import BeautifulSoup
+import datetime as dt
+import json
 
 def scraper(html_content):
     soup = BeautifulSoup(html_content.content, "html.parser")
-    
-    scrapeprice(soup)
+    with open(f"scraped_{dt.datetime.today().strftime('%Y-%m-%d')}.txt", "a", encoding="utf-8") as f:
+
+        titleprice = scrapetitleprice(soup)
+
+        output = {
+            "scrapeDate": dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "title": titleprice[0],
+            "price": titleprice[1],
+            "description": scrapedescription(soup) 
+        }
+
+        f.write(json.dumps(output, indent=4, ensure_ascii=False))
 
 
-def scrapeprice(soup):
+def scrapetitleprice(soup):
     parentscript = soup.find("script", {"type": "application/ld+json"})
-    print(parentscript)
+    if parentscript is not None:
+        parentjson = json.loads(parentscript.contents[0])
+        return parentjson["description"], parentjson["offers"]["price"]
 
 
 def scrapedescription(soup):
