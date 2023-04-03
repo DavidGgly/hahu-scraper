@@ -5,14 +5,15 @@ import requests
 def scraper(soup, counter):
 
     advertisementlinks = soup.find_all("h3")
+    i = 0
 
-    for i, onead in enumerate(advertisementlinks):
+    for onead in advertisementlinks:
         one = onead.find("a")
         if one is not None:
             carhref = one.attrs.get("href").split("#")[0]
-
             print(f"Processing {counter * 100 + i + 1}. car ...", end="\r")
             scrapecar.scraper(requests.get(carhref))
+            i += 1
 
 
 def scrapermain(html_content):
@@ -30,3 +31,4 @@ def scrapermain(html_content):
         else:
             # Load the next page
             html_content = requests.get(soup.find("link", {"rel": "next"}).attrs.get("href"))
+            counter += 1
